@@ -25,7 +25,7 @@ const createTiposUtilizadores = async () => {
   ];
 
   try{
-    await database.sync();
+    // await database.sync();
     await TipoUtilizador.bulkCreate(tiposUtilizadores, {ignoreDuplicates: true});
     console.log("Tipos de utilizadores criados com sucesso!");
   } catch (error) {

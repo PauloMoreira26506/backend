@@ -34,4 +34,29 @@ Chave.belongsTo(Compra, { foreignKey: 'compraid'});
 Produto.hasMany(Chave, { foreignKey: 'produtoid'});
 Compra.hasMany(Chave, { foreignKey: 'compraid'});
 
+const createChave = async () => {
+  const chaves = [
+    { chave: 'chave1', produtoid: 9},
+    { chave: 'chave2', produtoid: 9},
+    { chave: 'chave3', produtoid: 10},
+    { chave: 'chave4', produtoid: 10},
+    { chave: 'chave5', produtoid: 11},
+    { chave: 'chave6', produtoid: 11},
+    { chave: 'chave7', produtoid: 12},
+    { chave: 'chave8', produtoid: 12},
+    { chave: 'chave9', produtoid: 13},
+    { chave: 'chave10', produtoid: 13},
+  ];
+
+  try{
+    // await database.sync();
+    await Chave.bulkCreate(chaves, {ignoreDuplicates: true});
+    console.log("As chaves foram criadas!");
+  } catch (error) {
+    console.error("Erro ao criar as chaves: ", error);
+  }
+}
+
+createChave();
+
 module.exports = Chave;

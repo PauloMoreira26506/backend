@@ -6,7 +6,6 @@ const config = require('../config');
 const TipoUtilizador = require('../model/tipoutilizador');
 
 const controller = {}
-database.sync();
 
 controller.list = async (req, res) => {
     const data = await Utilizador.findAll()

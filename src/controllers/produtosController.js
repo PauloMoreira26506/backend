@@ -1,31 +1,32 @@
 var Produto = require("../model/produto");
 var Categoria = require("../model/categoriaproduto");
 var sequelize = require("../model/database");
-const { Op } = require ('sequelize');
+const { Op } = require("sequelize");
 
 const controller = {};
-sequelize.sync(); // Método para síncronizar os model. Se não existir as      tabelas na base de dados, são criadas automaticamente.
 
 // Controlador para listar os produtos
 controller.listar = async (req, res) => {
-  const {q} = req.query;
-  try{
+  const { q } = req.query;
+  try {
     let produtos;
-    if (q){
+    if (q) {
       produtos = await Produto.findAll({
         where: {
           nome: {
-            [Op.iLike]: `%${q}%`
-          }
+            [Op.iLike]: `%${q}%`,
+          },
         },
-        include: Categoria
+        include: Categoria,
       });
     } else {
-      produtos = await Produto.findAll({ include: Categoria});
+      produtos = await Produto.findAll({ include: Categoria });
     }
-    res.json({success: true, data: produtos});
-  } catch (error){
-    res.status(500).json({message: "Erro ao pesquisar", error: error.message});
+    res.json({ success: true, data: produtos });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erro ao pesquisar", error: error.message });
   }
 };
 
@@ -48,21 +49,24 @@ controller.listar_populares = async (req, res) => {
 //Controlador para listar os produtos de uma categoria
 
 controller.listar_categoria = async (req, res) => {
-  try{
+  try {
     const id = req.params.id;
     const data = await Produto.findAll({
-      where : { categoriaid: id},
+      where: { categoriaid: id },
       include: Categoria,
     });
 
-    if (data.length > 0){
-      res.status(200).json({success: true, data: data});
+    if (data.length > 0) {
+      res.status(200).json({ success: true, data: data });
+    } else {
+      res
+        .status(404)
+        .json({ message: "Nenhum produto encontrado para esta categoria" });
     }
-    else{
-      res.status(404).json({ message: "Nenhum produto encontrado para esta categoria" });
-    }
-  } catch (error){
-    res.status(500).json({ message: "Erro ao buscar produtos", error:error.message});
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erro ao buscar produtos", error: error.message });
   }
 };
 
@@ -70,18 +74,18 @@ controller.listar_categoria = async (req, res) => {
 
 controller.listar_produto = async (req, res) => {
   const id = req.params.id;
-  
-  try{
+
+  try {
     const produto = await Produto.findByPk(id, { include: Categoria });
     if (produto) {
-      res.json({success: true, data: produto});
+      res.json({ success: true, data: produto });
+    } else {
+      res.status(404).json({ message: "Produto não encontrado" });
     }
-    else{
-      res.status(404).json({ message: "Produto não encontrado"});
-    }
-  }
-  catch (error) {
-    res.status(500).json({ message: "Erro ao procurar o produto", error: error.message});
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erro ao procurar o produto", error: error.message });
   }
 };
 
@@ -101,29 +105,55 @@ controller.produto_create = async (req, res) => {
 // Controlador para editar o produto
 
 controller.update = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   console.log("Id-------------------: ", id.id);
-  const{nome, emp, versao, tamanho, publicacao, preco, classificacao, imagem, capa, popular, descricao, categoriaid, prints} = req.body;
-  const data = await Produto.update({
-    nome: nome,
-    emp: emp,
-    versao: versao,
-    tamanho: tamanho,
-    publicacao: publicacao,
-    preco: preco,
-    classificacao: classificacao,
-    imagem: imagem,
-    capa: capa,
-    popular: popular,
-    descricao: descricao,
-    prints: prints,
-    categoriaid: categoriaid
-  }, {where: {id:id}})
-  .then(function(data){
-    return data;
-  })
-  .catch(error => {return error;})
-  res.json({success: true, data:data, message:"Update successful"});
+  const {
+    nome,
+    emp,
+    versao,
+    tamanho,
+    publicacao,
+    preco,
+    classificacao,
+    imagem,
+    capa,
+    popular,
+    descricao,
+    categoriaid,
+    prints,
+  } = req.body;
+  const data = await Produto.update(
+    {
+      nome: nome,
+      emp: emp,
+      versao: versao,
+      tamanho: tamanho,
+      publicacao: publicacao,
+      preco: preco,
+      classificacao: classificacao,
+      imagem: imagem,
+      capa: capa,
+      popular: popular,
+      descricao: descricao,
+      prints: prints,
+      categoriaid: categoriaid,
+    },
+    { where: { id: id } }
+  )
+    .then(function (data) {
+      return data;
+    })
+    .catch((error) => {
+      return error;
+    });
+  res.json({ success: true, data: data, message: "Update successful" });
 };
 
+// Controlador para eliminar um produto
+
+controller.delete = async (req, res) => {
+  const { id } = req.body;
+  const del = await Produto.destroy({ where: { id: id } })
+  res.json({success: true, deleted: del, message: "Deleted succssful"});
+}
 module.exports = controller;

@@ -2,13 +2,12 @@ var Categoria = require("../model/categoriaproduto");
 var sequelize = require("../model/database");
 
 const controller = {};
-sequelize.sync(); // Método para síncronizar os model. Se não existir as      tabelas na base de dados, são criadas automaticamente.
 
 // Controlador para listar as categorias dos produtos
 
 controller.listar_todas = async (req, res) => {
   try{
-    const data = await Categoria.findAll()
+    const data = await Categoria.findAll();
     res.json({ success: true, data: data });
   } catch(error){
     console.error("Erro ao obter as categorias", error);

@@ -8,7 +8,7 @@ const sequelize = require("../model/database");
 const { Op } = require("sequelize");
 const controller = {};
 
-database.sync();
+// Controlador para associar uma chave a um utilizador
 
 controller.associarUtilizador = async (req, res) => {
   const { utilizador, produto } = req.body;
@@ -55,12 +55,16 @@ controller.associarUtilizador = async (req, res) => {
   }
 };
 
+// Controlador para listar todas as chaves
+
 controller.list = async (req, res) => {
   const data = await Chave.findAll().then(function (data) {
     return data;
   });
   res.json({ success: true, data: data });
 };
+
+// Controlador para listar uma compra
 
 controller.list_compra = async (req, res) => {
   try {
@@ -77,6 +81,8 @@ controller.list_compra = async (req, res) => {
   }
 };
 
+// Controlador para listar as chaves de um compra
+
 controller.list_chaves_compra = async (req, res) => {
   try {
     const id = req.params.id;
@@ -92,6 +98,8 @@ controller.list_chaves_compra = async (req, res) => {
     res.status(500).json({ message: "Procura de chaves falhou", error });
   }
 };
+
+// Controlador para associar um gerente a uma compra
 
 controller.associarGerente = async (req, res) => {
   const { email, quantidade, compraid, utilizadorAtual } = req.body;
@@ -167,6 +175,8 @@ controller.associarGerente = async (req, res) => {
   }
 };
 
+// Controlador para listar as chaves que um comprador associou a um gerente
+
 controller.listar_associacoes_comprador = async (req, res) => {
   try {
     const id = req.params.id;
@@ -191,6 +201,8 @@ controller.listar_associacoes_comprador = async (req, res) => {
     res.status(500).json({ message: "Procura de associações falhou", error });
   }
 };
+
+// Controlador para listar as associações que foram atribuídas a um gerente
 
 controller.listar_associacoes_gerente = async (req, res) => {
   try {

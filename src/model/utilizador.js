@@ -61,6 +61,39 @@ Utilizador.beforeCreate((utilizador, options) => {
     });
 });
 
-Utilizador.belongsTo(tipoutilizador, { foreignKey: 'tipoutilizadorid' });
+Utilizador.belongsTo(tipoutilizador, { foreignKey: "tipoutilizadorid" });
+
+const createUtilizador = async () => {
+  const utilizadores = [
+    {
+      nome: "Admin",
+      email: "admin@email.com",
+      password: "$2b$10$MvA9Vh0yOZu8DAXFZlRml.HqEhkpRYK9AuJvCme3fWYwyluhs4N4a",
+      tipoutilizadorid: 1,
+    },
+    {
+      nome: "Comprador",
+      email: "comprador@email.com",
+      password: "$2b$10$MvA9Vh0yOZu8DAXFZlRml.HqEhkpRYK9AuJvCme3fWYwyluhs4N4a",
+      tipoutilizadorid: 2,
+    },
+    {
+      nome: "Gerente",
+      email: "gerente@email.com",
+      password: "$2b$10$MvA9Vh0yOZu8DAXFZlRml.HqEhkpRYK9AuJvCme3fWYwyluhs4N4a",
+      tipoutilizadorid: 3,
+    }
+  ];
+
+  try {
+    // await database.sync();
+    await Utilizador.bulkCreate(utilizadores, { ignoreDuplicates: true });
+    console.log("Utilizadores criados com sucesso!");
+  } catch (error) {
+    console.error("Erro ao criar o utilizador: ", error);
+  }
+};
+
+createUtilizador();
 
 module.exports = Utilizador;

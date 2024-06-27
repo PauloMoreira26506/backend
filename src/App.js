@@ -33,10 +33,10 @@ const middleware = require('./middleware');
 
 // Rotas
 
-app.use("/produtos", middleware.checkToken, produtosRouters);
+app.use("/produtos", produtosRouters);
 app.use("/categorias", categoriasRouters);
 app.use("/utilizadores", utilizadorRouters);
-app.use('/chaves', middleware.checkToken, chaveRouters);
+app.use('/chaves', chaveRouters);
 
 app.listen(app.get("port"), () => {
   console.log("Start server on port " + app.get("port"));
