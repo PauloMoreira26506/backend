@@ -21,6 +21,10 @@ const AssociacaoChave = database.define("associacaochave", {
     utilizadorid: {
         type: sequelize.INTEGER,
         allowNull: false
+    },
+    ativa: {
+        type: sequelize.BOOLEAN,
+        defaultValue: true,
     }
 }, {
     tableName: "associacaochave",

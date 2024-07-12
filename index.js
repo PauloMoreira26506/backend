@@ -1,30 +1,16 @@
-const sequelize = require('./config/db');
-const Produto = require('../models/produto');
-const Empresa = require('../models/empresa');
-await database.sync();
+// const { Pacote, Produto } = require('./src/model');
+// const database = require('./src/model/database');
 
-(async () => {
-/*const novaEmpresa = await Empresa.create({
-    nome: 'Adobe'
-})
+// // Sincronizando os modelos com a base de dados
+// database.sync()
+//   .then(() => {
+//     console.log('Database & tables created!');
+//   })
+//   .catch(error => {
+//     console.error('Error creating database:', error);
+//   });
 
-const novoProduto = await Produto.create({
-    nome: 'Adobe',
-    versao: 14,
-    tamanho: 10.6,
-    preco: 100,
-    classificacao: 4.8,
-    idEmpresa: novaEmpresa.id
-})
-console.log(novoProduto);
-
-const produto = await Produto.findByPk(1 { include: Empresa });
-console.log(produto.empresa.nome);*/
-
-const empresa = await Empresa.findByPk(1, { include: Produto });
-/*const produto = await empresa.getProduto();**/
-console.log(empresa.produto);
-
-});
-
-const empresa = await Empresa.findByPk(1);
+// module.exports = {
+//   Pacote,
+//   Produto
+// };

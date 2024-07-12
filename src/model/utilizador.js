@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const database = require("./database");
 const bcrypt = require("bcrypt");
-var tipoutilizador = require("./tipoutilizador");
+var TipoUtilizador = require("./tipoutilizador");
 
 const Utilizador = database.define(
   "utilizador",
@@ -43,6 +43,10 @@ const Utilizador = database.define(
         key: "id",
       },
     },
+    ativo: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true,
+    }
   },
   {
     tableName: "utilizador",
@@ -61,7 +65,7 @@ Utilizador.beforeCreate((utilizador, options) => {
     });
 });
 
-Utilizador.belongsTo(tipoutilizador, { foreignKey: "tipoutilizadorid" });
+Utilizador.belongsTo(TipoUtilizador, { foreignKey: "tipoutilizadorid" });
 
 const createUtilizador = async () => {
   const utilizadores = [

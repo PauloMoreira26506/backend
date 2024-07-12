@@ -1,36 +1,52 @@
-const Sequelize = require('sequelize');
-const database = require('./database');
+const Sequelize = require("sequelize");
+const database = require("./database");
 
-const Orcamento = database.define('orcamento', {
-  id: {
-    type: Sequelize.SERIAL,
-    primaryKey: true,
-    autoIncrement: true
+const Orcamento = database.define(
+  "orcamento",
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    empresa: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    licencas: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+    setor: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    mensagem: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    utilizadorid: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+    data: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.NOW,
+    },
+    pacoteid: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    }, 
+    extensaoid: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    }
   },
-  /*uti_id: {
-    type: Sequelize.INTEGER,
-    allowNull: false
-  },*/
-  nomeempresa: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  numerolicancas: {
-    type: Sequelize.INTEGER,
-    allowNull: false
-  },
-  setor: {
-    type: Sequelize.STRING,
-  },
-  data: {
-    type: Sequelize.DATE,
-    allowNull: false
+  {
+    tableName: "orcamento",
+    timestamps: false,
   }
-});
-
-Orcamento.belongsTo(Utilizador, {
-    constraint: true,
-    ForeignKey: 'uti_id'
-})
+);
 
 module.exports = Orcamento;

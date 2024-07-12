@@ -24,6 +24,13 @@ const Chave = database.define("chave", {
   ativa: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
+  },
+  dataCompra: {
+    type: Sequelize.DATE,
+  },
+  instalada: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
   }
 }, {
   tableName: "chave",
@@ -45,7 +52,12 @@ const createChave = async () => {
     { chave: 'chave7', produtoid: 4},
     { chave: 'chave8', produtoid: 4},
     { chave: 'chave9', produtoid: 5},
-    { chave: 'chave10', produtoid: 5},
+    { chave: 'chave10', produtoid: 1},
+    { chave: 'chave11', produtoid: 2},
+    { chave: 'chave12', produtoid: 1},
+    { chave: 'chave13', produtoid: 1},
+    { chave: 'chave14', produtoid: 1},
+    { chave: 'chave15', produtoid: 1},
   ];
 
   try{

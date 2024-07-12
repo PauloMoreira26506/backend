@@ -1,5 +1,9 @@
 var Produto = require("../model/produto");
 var Categoria = require("../model/categoriaproduto");
+var PacoteProduto = require("../model/pacoteproduto");
+var Pacote = require("../model/pacote");
+var Extensao = require("../model/extensao");
+var VersaoProduto = require("../model/versaoproduto");
 var sequelize = require("../model/database");
 const { Op } = require("sequelize");
 
@@ -20,7 +24,9 @@ controller.listar = async (req, res) => {
         include: Categoria,
       });
     } else {
-      produtos = await Produto.findAll({ include: Categoria });
+      produtos = await Produto.findAll({
+        include: { model: Categoria },
+      });
     }
     res.json({ success: true, data: produtos });
   } catch (error) {
@@ -106,7 +112,7 @@ controller.produto_create = async (req, res) => {
 
 controller.update = async (req, res) => {
   const { id } = req.params;
-  console.log("Id-------------------: ", id.id);
+  console.log("Id-------------------: ", id);
   const {
     nome,
     emp,
@@ -122,6 +128,22 @@ controller.update = async (req, res) => {
     categoriaid,
     prints,
   } = req.body;
+
+  console.log(
+    nome,
+    emp,
+    versao,
+    tamanho,
+    publicacao,
+    preco,
+    classificacao,
+    imagem,
+    capa,
+    popular,
+    descricao,
+    categoriaid,
+    prints
+  );
   const data = await Produto.update(
     {
       nome: nome,
@@ -136,7 +158,7 @@ controller.update = async (req, res) => {
       popular: popular,
       descricao: descricao,
       prints: prints,
-      categoriaid: categoriaid,
+      categoriaid: categoriaid.id,
     },
     { where: { id: id } }
   )
@@ -153,7 +175,121 @@ controller.update = async (req, res) => {
 
 controller.delete = async (req, res) => {
   const { id } = req.body;
-  const del = await Produto.destroy({ where: { id: id } })
-  res.json({success: true, deleted: del, message: "Deleted succssful"});
+  const del = await Produto.destroy({ where: { id: id } });
+  res.json({ success: true, deleted: del, message: "Deleted succssful" });
+};
+
+// Controlador para buscar os pacotes a que um produto pertence
+
+controller.pacote = async (req, res) => {
+  const id = req.params.id;
+  console.log("Pacotes do produto: ", id);
+
+  try {
+    const data = await PacoteProduto.findAll({
+      where: { produtoid: id },
+      include: [
+        {
+          model: Pacote,
+          attributes: ["id", "designacao"],
+          include: [{ model: Produto, attributes: ["id", "nome"] }],
+        },
+      ],
+    });
+    if (data.length > 0) {
+      res.json({ success: true, data: data });
+    } else {
+      res.status(404).json({ message: "Pacotes não encontrados." });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erro ao procurar os pacotes: ", error: error.message });
+  }
+};
+
+// Controlador para buscar as extensões a que um produto pertence
+
+controller.extensoes = async (req, res) => {
+  const id = req.params.id;
+  console.log("Extensões do produto: ", id);
+
+  try {
+    const data = await Extensao.findAll({
+      where: { produtoid: id },
+    });
+    if (data.length > 0) {
+      res.json({ success: true, data: data });
+    } else {
+      res.status(404).json({ message: "Extensões não encontrados." });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Erro ao procurar as extensões: ",
+      error: error.message,
+    });
+  }
+};
+
+controller.versoes = async (req, res) => {
+  const id = req.params.id;
+  console.log("Versões do produto: ", id);
+  try {
+    const data = await VersaoProduto.findAll({
+      where: { produtoid: id },
+      include: { model: Produto },
+    });
+    if (data.length > 0) {
+      res.json({ success: true, data: data });
+    } else {
+      res.status(404).json({ message: "Versões não encontradas." });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erro ao procurar as versões: ", error: error.message });
+  }
+};
+
+controller.criar_versao = async (req, res) => {
+  const { id } = req.params;
+  const {versao} = req.body;
+  try{
+    const data = await VersaoProduto.create({
+      versao: versao,
+      produtoid: id,
+    });
+    res.json({ success: true, data: data, message: "Versão criada com sucesso" });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao criar a versão: ", error: error.message });
+  }
 }
+
+controller.listar_pacotes = async (req, res) => {
+  try{
+    const data = await Pacote.findAll();
+    res.json({ success: true, data: data });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao procurar os pacotes: ", error: error.message });
+  }
+}
+
+controller.listar_pacoteproduto = async (req, res) => {
+try{
+  const data = await PacoteProduto.findAll();
+  res.json({ success: true, data: data });
+} catch (error) {
+  res.status(500).json({ message: "Erro ao procurar os pacotes: ", error: error.message });
+}
+};
+
+controller.listar_extensoes = async (req, res) => {
+  try{
+    const data = await Extensao.findAll();
+    res.json({ success: true, data: data });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao procurar as extensoes: ", error: error.message });
+  }
+};
+
 module.exports = controller;
