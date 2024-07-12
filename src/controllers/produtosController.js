@@ -292,4 +292,58 @@ controller.listar_extensoes = async (req, res) => {
   }
 };
 
+controller.criar_extensao = async (req, res) => {
+  const { id } = req.params;
+  const {designacao, descricao} = req.body;
+  console.log(id, req.body);
+  try{
+    const data = await Extensao.create({
+      designacao: designacao,
+      descricao: descricao,
+      produtoid: id,
+    });
+    res.json({ success: true, data: data, message: "Extensão criada com sucesso" });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao criar a extensão: ", error: error.message });
+  }
+}
+controller.criar_pacote = async (req, res) => {
+  const {designacao} = req.body;
+  try{
+    const data = await Pacote.create({
+      designacao: designacao,
+    });
+    res.json({ success: true, data: data, message: "Pacote criado com sucesso" });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao criar o pacote: ", error: error.message });
+  }
+};
+
+controller.associar_pacote = async (req, res) => {
+  const {produtoid, pacoteid} = req.body;
+  console.log(req.body);
+  try{
+    const data = await PacoteProduto.create({
+      pacoteid: pacoteid,
+      produtoid: produtoid,
+    });
+    res.json({ success: true, data: data, message: "Associação criada com sucesso" });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao criar a associação: ", error: error.message });
+  }
+};
+
+controller.listar_produtospacote = async (req, res) => {
+  const {id} = req.params;
+  try{
+    const data = await PacoteProduto.findAll({
+      where: { pacoteid: id },
+      include: { model: Produto },
+    });
+    res.json({ success: true, data: data });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao procurar os produtos: ", error: error.message });
+  }
+};
+
 module.exports = controller;

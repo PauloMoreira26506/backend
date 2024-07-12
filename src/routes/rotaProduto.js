@@ -17,6 +17,10 @@ router.get('/pacotes/:id', controller.pacote);
 router.get('/extensoes/:id', controller.extensoes);
 router.get('/versoes/:id', controller.versoes);
 router.post('/criarversao/:id', controller.criar_versao);
+router.post('/criarextensao/:id', controller.criar_extensao);
+router.post('/criarpacote', controller.criar_pacote);
+router.post('/produtopacote', controller.associar_pacote);
+router.get('/produtospacote/:id', controller.listar_produtospacote);
 
 
 module.exports = router;
